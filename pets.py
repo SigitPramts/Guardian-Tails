@@ -2,26 +2,27 @@ from db import conn
 from flask import request
 from psycopg2.errors import DatabaseError
 
-
-def get_pets():
+#Get * Binatang Done
+def get_binatang():
     cur = conn.cursor()
     try:
-        cur.execute("SELECT id, image, name, bio, status, date_discovered, image FROM pets")
+        cur.execute("SELECT id_binatang, nama_binatang, jenis_kelamin, jenis_hewan, tanggal_ditemukan, lokasi_gambar, id_admin FROM binatang")
         pets = cur.fetchall()
 
         # Convert tuple to dictionary
         # Karena python mereturn tipe data tuple. Maka kita harus mengubahnya menjadi dictionary
-        new_pets = []
+        simpan_pets = []
         for pet in pets:
-            new_todo = {
-                "id": pet[0],
-                "image": pet[1],
-                "name": pet[2],
-                "bio": pet[3],
-                "status": pet[4],
-                "date_discovered": pet[5]
+            pet_dict = {
+                "id_binatang": pet[0],
+                "nama_binatang": pet[1],
+                "jenis_kelamin": pet[2],
+                "jenis_hewan": pet[3],
+                "tanggal_ditemukan": pet[4],
+                "lokasi_gambar": pet[5],
+                "id_admin": pet[6]
             }
-            new_pets.append(new_todo)
+            simpan_pets.append(pet_dict)
 
         conn.commit()
     except Exception as e:
@@ -30,7 +31,7 @@ def get_pets():
     finally:
         cur.close()
 
-    return new_pets
+    return simpan_pets
 
 def get_pet_id(id):
     cur = conn.cursor()
@@ -59,14 +60,16 @@ def get_pet_id(id):
         "date_discovered": pet[5]
     }
 
-def new_pet(nama: str, bio: str, status: str):
+def new_binatang(nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, lokasi_gambar: str, id_admin: int):
     cur = conn.cursor()
     try:
-        cur.execute('INSERT INTO test (nama, bio, status) VALUES (%(nama)s, %(bio)s, %(status)s)',
+        cur.execute('INSERT INTO binatang (nama_binatang, jenis_kelamin, jenis_hewan, lokasi_gambar, id_admin) VALUES (%(nama_binatang)s, %(jenis_kelamin)s, %(jenis_hewan)s, %(lokasi_gambar)s, %(id_admin)s)',
             {
-                "nama": nama,
-                "bio": bio,
-                "status": status,
+                "nama_binatang": nama_binatang,
+                "jenis_kelamin": jenis_kelamin,
+                "jenis_hewan": jenis_hewan,
+                "lokasi_gambar": lokasi_gambar,
+                "id_admin": id_admin,
             },
         )
         conn.commit()
@@ -76,6 +79,8 @@ def new_pet(nama: str, bio: str, status: str):
     finally:
         cur.close()
 
+#----------------------------------------------------------------------------
+#Login Done
 def auth(email, password):
     cur = conn.cursor()
     try:
@@ -94,6 +99,7 @@ def auth(email, password):
     finally:
         conn.close()
 
+#Register Done
 def register(username: str, password: str, nama_lengkap: str, email: str):
     cur = conn.cursor()
     try:
@@ -110,3 +116,120 @@ def register(username: str, password: str, nama_lengkap: str, email: str):
         raise e
     finally:
         cur.close()
+
+#----------------------------------------------------------------------------
+def new_donatur(nama_donatur: str, email_donatur: str, jumlah_donasi: int):
+    cur = conn.cursor()
+    try:
+        cur.execute('INSERT INTO donatur (nama_donatur, email_donatur, jumlah_donasi) VALUES (%(nama_donatur)s, %(email_donatur)s, %(jumlah_donasi)s)',
+                    {
+                        "nama_donatur":nama_donatur,
+                        "email_donatur":email_donatur,
+                        "jumlah_donasi":jumlah_donasi,
+                    },)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        cur.close()
+
+def edit_donatur(id_donatur, nama_donatur: str, email_donatur: str, jumlah_donasi: int):
+    cur = conn.cursor()
+    try:
+        cur.execute('UPDATE donatur SET nama_donatur =%s, email_donatur =%s, jumlah_donasi =%s WHERE id_donatur = %s',(nama_donatur,email_donatur,jumlah_donasi,id_donatur))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        cur.close()
+
+def del_donatur(id_donatur):
+    cur = conn.cursor()
+    try:
+        cur.execute('DELETE FROM donatur WHERE id_donatur = %s', (id_donatur,))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        conn.close()
+
+
+#----------------------------------------------------------------------------
+def new_kegiatan(jenis_kegiatan: str, lokasi_kegiatan: str):
+    cur = conn.cursor()
+    try:
+        cur.execute('INSERT INTO kegiatan (jenis_kegiatan, lokasi_kegiatan) VALUES (%(jenis_kegiatan)s, %(lokasi_kegiatan)s)',
+                    {
+                        "jenis_kegiatan":jenis_kegiatan,
+                        "lokasi_kegiatan":lokasi_kegiatan,
+                    },)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        cur.close()
+
+def edit_kegiatan(id_kegiatan, jenis_kegiatan: str, lokasi_kegiatan: str):
+    cur = conn.cursor()
+    try:
+        cur.execute('UPDATE kegiatan SET jenis_kegiatan =%s, lokasi_kegiatan =%s WHERE id_kegiatan = %s',(jenis_kegiatan,lokasi_kegiatan,id_kegiatan))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        cur.close()
+
+def del_kegiatan(id_kegiatan):
+    cur = conn.cursor()
+    try:
+        cur.execute('DELETE FROM kegiatan WHERE id_kegiatan = %s', (id_kegiatan,))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        conn.close()
+
+
+#----------------------------------------------------------------------------
+def new_penyelamatan(lokasi_penyelamatan: str, nama_penyelamatan: str):
+    cur = conn.cursor()
+    try:
+        cur.execute('INSERT INTO penyelamatan (lokasi_penyelamatan, nama_penyelamatan) VALUES (%(lokasi_penyelamatan)s, %(nama_penyelamatan)s)',
+                    {
+                        "lokasi_penyelamatan":lokasi_penyelamatan,
+                        "nama_penyelamatan":nama_penyelamatan,
+                    },)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        cur.close()
+
+def edit_penuyelamatan(id_penyelamatan, lokasi_penyelamatan: str, nama_penyelamatan: str):
+    cur = conn.cursor()
+    try:
+        cur.execute('UPDATE penyelamatan SET lokasi_penyelamatan =%s, nama_penyelamatan =%s WHERE id_penyelamatan = %s',(lokasi_penyelamatan,nama_penyelamatan,id_penyelamatan))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        cur.close()
+
+def del_penyelamatan(id_penyelamatan):
+    cur = conn.cursor()
+    try:
+        cur.execute('DELETE FROM penyelamatan WHERE id_penyelamatan = %s', (id_penyelamatan,))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        conn.close()

@@ -1,0 +1,20 @@
+
+    if "file" not in request.files:
+        return "No file part"
+
+    file = request.files["file"]
+
+    if file.filename == "":
+        return "No selected file"
+
+    if file.content_type not in [
+        "image/jpeg",
+        "image/jpg",
+        "image/webp",
+        "image/png",
+    ]:
+        return "File type not allowed"
+
+    # Save the uploaded file to a specific folder, for example, the 'uploads' folder
+    location = "static/uploads/" + str(time.time()) + "_" + file.filename
+    file.save(location)
