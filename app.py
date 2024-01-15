@@ -58,24 +58,42 @@ def get_pet_id(id):
         return "", 404
     return pet
 
-@app.post("/binatang")
-def new_binatang():
+@app.route("/upload_gambar", methods=["POST"])
+def upload_gambar():
     try:
-        nama_binatang = request.form.get("nama_binatang")
-        jenis_kelamin = request.form.get("jenis_kelamin")
-        jenis_hewan = request.form.get("jenis_hewan")
-        lokasi_gambar = request.form.get("lokasi_gambar")
-        id_admin = request.form.get("id_admin")
+        # Check if the 'file' key exists in request.files
+        if "file" not in request.files:
+            return "No file part"
 
-        file = request.files["file"]
+        files = request.files.getlist("file")
 
-        location = "static/images/" + str(time.time()) + "_" + file.filename
-        pets.new_binatang(nama_binatang, jenis_kelamin, jenis_hewan, lokasi_gambar, id_admin)
-        file.save(location)
+        # Check if files list is empty
+        if not files:
+            return "No selected file"
 
-        return "", 202
-    except ValidateError as e:
-        return str(e), 401
+        locations = []
+
+        for file in files:
+            # Check file type
+            if file.content_type not in ["image/jpeg", "image/jpg", "image/webp", "image/png"]:
+                return "File type not allowed"
+
+            location = "static/images/" + str(time.time()) + "_" + file.filename
+            file.save(location)
+            locations.append(location)
+
+        # Assume you have a function named 'upload_gambar' that takes a list of locations
+        pets.upload_gambar(lokasi_gambar=locations)
+
+        return {"message": "Upload gambar berhasil"}, 200
+    except Exception as e:
+        # If an exception occurs, delete the uploaded files
+        for location in locations:
+            if os.path.exists(location):
+                os.remove(location)
+        raise e
+
+
 
         
 #----------------------------------------------------------------------------

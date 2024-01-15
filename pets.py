@@ -1,4 +1,5 @@
 from db import conn
+import time
 from flask import request
 from psycopg2.errors import DatabaseError
 
@@ -60,18 +61,10 @@ def get_pet_id(id):
         "date_discovered": pet[5]
     }
 
-def new_binatang(nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, lokasi_gambar: str, id_admin: int):
+def upload_gambar(lokasi_gambar):
     cur = conn.cursor()
     try:
-        cur.execute('INSERT INTO binatang (nama_binatang, jenis_kelamin, jenis_hewan, lokasi_gambar, id_admin) VALUES (%(nama_binatang)s, %(jenis_kelamin)s, %(jenis_hewan)s, %(lokasi_gambar)s, %(id_admin)s)',
-            {
-                "nama_binatang": nama_binatang,
-                "jenis_kelamin": jenis_kelamin,
-                "jenis_hewan": jenis_hewan,
-                "lokasi_gambar": lokasi_gambar,
-                "id_admin": id_admin,
-            },
-        )
+        cur.execute("INSERT INTO gambar (lokasi_gambar) VALUES (%s)", (lokasi_gambar))
         conn.commit()
     except Exception as e:
         conn.rollback()
