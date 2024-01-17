@@ -21,41 +21,35 @@ jwt = JWTManager(app)
 import controllers.donatur as donatur
 import controllers.kegiatan as kegiatan
 import controllers.penyelamatan as penyelamatan
+import controllers.auth as user
 
-#Login Done
+
+#----------------------------------------------------------------------------
+#Auth done
 @app.post("/login")
 def login():
-    email = request.form.get('email', None)
-    password = request.form.get('password', None)
-    if pets.auth(email, password) is None:
-        return {"msg":"Email atau password tidak benar"}
-    
-    access_token = create_access_token(identity=email)
-    return{"access_token":access_token}, 200
+    return user.login_controller()
 
-#Register Done
 @app.post("/register")
 def register():
-    try:
-        username = request.form.get('username')
-        password = request.form.get('password')
-        nama_lengkap = request.form.get('nama_lengkap')
-        email = request.form.get('email')
+    return user.register_controller()
 
-        validate_register(username, password, nama_lengkap, email)
-        pets.register(username, password, nama_lengkap, email)
-        return "", 202
-    except ValidateError as e:
-        return str(e), 401
+@app.put("/user/<int:id_admin>")
+def edit_user(id_admin: int):
+    return user.edit_user(id_admin)
+
+@app.delete("/user/<int:id_admin>")
+def del_user(id_admin: int):
+    return user.del_user(id_admin)
     
-
+    
 #----------------------------------------------------------------------------
 
 @app.get("/pets")
 def get_binatang():
     return pets.get_binatang()
 
-@app.get('/pets/<int:id>')
+@app.get("/pets/<int:id_admin>")
 def get_pet_id(id):
     pet = pets.get_pet_id(id)
     if pet is None:
