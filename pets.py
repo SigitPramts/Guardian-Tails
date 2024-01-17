@@ -3,6 +3,44 @@ import time
 from flask import request
 from psycopg2.errors import DatabaseError
 
+#Login Done
+def auth(email, password):
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT * FROM admin WHERE email = %s AND password = %s", (email, password))
+        pets = cur.fetchone()
+        conn.commit()
+        if pets is None:
+            return None
+        return{
+            'email':pets[0],
+            'password':pets[1]
+        }
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        conn.close()
+
+#Register Done
+def register(username: str, password: str, nama_lengkap: str, email: str):
+    cur = conn.cursor()
+    try:
+        cur.execute('INSERT INTO admin (username, password, nama_lengkap, email) VALUES (%(username)s, %(password)s, %(nama_lengkap)s, %(email)s)',
+                    {
+                        "username":username,
+                        "password":password,
+                        "nama_lengkap":nama_lengkap,
+                        "email":email,
+                    },)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        cur.close()
+
+#----------------------------------------------------------------------------
 #Get * Binatang Done
 def get_binatang():
     cur = conn.cursor()
@@ -61,10 +99,10 @@ def get_pet_id(id):
         "date_discovered": pet[5]
     }
 
-def upload_gambar(lokasi_gambar):
+def upload_gambar(id_binatang, lokasi_gambar):
     cur = conn.cursor()
     try:
-        cur.execute("INSERT INTO gambar (lokasi_gambar) VALUES (%s)", (lokasi_gambar))
+        cur.execute("INSERT INTO gambar (id_binatang,lokasi_gambar) VALUES (%s, %s)", (id_binatang,lokasi_gambar))
         conn.commit()
     except Exception as e:
         conn.rollback()
@@ -72,46 +110,35 @@ def upload_gambar(lokasi_gambar):
     finally:
         cur.close()
 
-#----------------------------------------------------------------------------
-#Login Done
-def auth(email, password):
+def edit_gambar(id_gambar: int, lokasi_gambar: str):
     cur = conn.cursor()
     try:
-        cur.execute("SELECT * FROM admin WHERE email = %s AND password = %s", (email, password))
-        pets = cur.fetchone()
+        cur.execute("UPDATE gambar SET lokasi_gambar =%s WHERE id_gambar =%s", (lokasi_gambar,id_gambar))
         conn.commit()
-        if pets is None:
-            return None
-        return{
-            'email':pets[0],
-            'password':pets[1]
-        }
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        cur.close()
+#Belum selesai
+def del_gambar(id_gambar: int, id_binatang):
+    cur = conn.cursor()
+    try:
+        cur.execute('DELETE FROM gambar WHERE id_gambar = %s', (id_gambar,id_binatang,))
+        pet = cur.fetchone()
+        conn.commit()
     except Exception as e:
         conn.rollback()
         raise e
     finally:
         conn.close()
+        
+    if pet is None:
+        return None
 
-#Register Done
-def register(username: str, password: str, nama_lengkap: str, email: str):
-    cur = conn.cursor()
-    try:
-        cur.execute('INSERT INTO admin (username, password, nama_lengkap, email) VALUES (%(username)s, %(password)s, %(nama_lengkap)s, %(email)s)',
-                    {
-                        "username":username,
-                        "password":password,
-                        "nama_lengkap":nama_lengkap,
-                        "email":email,
-                    },)
-        conn.commit()
-    except Exception as e:
-        conn.rollback()
-        raise e
-    finally:
-        cur.close()
 
 #----------------------------------------------------------------------------
-def new_donatur(nama_donatur: str, email_donatur: str, jumlah_donasi: int):
+'''def new_donatur(nama_donatur: str, email_donatur: str, jumlah_donasi: int):
     cur = conn.cursor()
     try:
         cur.execute('INSERT INTO donatur (nama_donatur, email_donatur, jumlah_donasi) VALUES (%(nama_donatur)s, %(email_donatur)s, %(jumlah_donasi)s)',
@@ -147,50 +174,14 @@ def del_donatur(id_donatur):
         conn.rollback()
         raise e
     finally:
-        conn.close()
+        conn.close()'''
 
 
 #----------------------------------------------------------------------------
-def new_kegiatan(jenis_kegiatan: str, lokasi_kegiatan: str):
-    cur = conn.cursor()
-    try:
-        cur.execute('INSERT INTO kegiatan (jenis_kegiatan, lokasi_kegiatan) VALUES (%(jenis_kegiatan)s, %(lokasi_kegiatan)s)',
-                    {
-                        "jenis_kegiatan":jenis_kegiatan,
-                        "lokasi_kegiatan":lokasi_kegiatan,
-                    },)
-        conn.commit()
-    except Exception as e:
-        conn.rollback()
-        raise e
-    finally:
-        cur.close()
-
-def edit_kegiatan(id_kegiatan, jenis_kegiatan: str, lokasi_kegiatan: str):
-    cur = conn.cursor()
-    try:
-        cur.execute('UPDATE kegiatan SET jenis_kegiatan =%s, lokasi_kegiatan =%s WHERE id_kegiatan = %s',(jenis_kegiatan,lokasi_kegiatan,id_kegiatan))
-        conn.commit()
-    except Exception as e:
-        conn.rollback()
-        raise e
-    finally:
-        cur.close()
-
-def del_kegiatan(id_kegiatan):
-    cur = conn.cursor()
-    try:
-        cur.execute('DELETE FROM kegiatan WHERE id_kegiatan = %s', (id_kegiatan,))
-        conn.commit()
-    except Exception as e:
-        conn.rollback()
-        raise e
-    finally:
-        conn.close()
 
 
 #----------------------------------------------------------------------------
-def new_penyelamatan(lokasi_penyelamatan: str, nama_penyelamatan: str):
+'''def new_penyelamatan(lokasi_penyelamatan: str, nama_penyelamatan: str):
     cur = conn.cursor()
     try:
         cur.execute('INSERT INTO penyelamatan (lokasi_penyelamatan, nama_penyelamatan) VALUES (%(lokasi_penyelamatan)s, %(nama_penyelamatan)s)',
@@ -225,4 +216,4 @@ def del_penyelamatan(id_penyelamatan):
         conn.rollback()
         raise e
     finally:
-        conn.close()
+        conn.close()'''

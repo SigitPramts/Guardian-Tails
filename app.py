@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, jsonify
-import os, time, db
+import os, time
 from flask_jwt_extended import (
     JWTManager,
     jwt_required,
@@ -17,6 +17,10 @@ app = Flask(__name__)
 CORS(app)
 app.config["JWT_SECRET_KEY"] = "secret key boleh random"
 jwt = JWTManager(app)
+
+import controllers.donatur as donatur
+import controllers.kegiatan as kegiatan
+import controllers.penyelamatan as penyelamatan
 
 #Login Done
 @app.post("/login")
@@ -58,8 +62,9 @@ def get_pet_id(id):
         return "", 404
     return pet
 
-@app.route("/upload_gambar", methods=["POST"])
-def upload_gambar():
+#Upload Gambar Done
+@app.route("/gambar/<int:id_binatang>", methods=["POST"])
+def upload_gambar(id_binatang: int):
     try:
         # Check if the 'file' key exists in request.files
         if "file" not in request.files:
@@ -82,8 +87,8 @@ def upload_gambar():
             file.save(location)
             locations.append(location)
 
-        # Assume you have a function named 'upload_gambar' that takes a list of locations
-        pets.upload_gambar(lokasi_gambar=locations)
+            # Assume you have a function named 'upload_gambar' that takes a list of locations
+            pets.upload_gambar(id_binatang,lokasi_gambar=location)
 
         return {"message": "Upload gambar berhasil"}, 200
     except Exception as e:
@@ -92,103 +97,124 @@ def upload_gambar():
             if os.path.exists(location):
                 os.remove(location)
         raise e
+        
+#Edit Gambar Done
+@app.route("/gambar/<int:id_gambar>", methods=["PUT"])
+def edit_gambar(id_gambar):
+    if "file" not in request.files:
+        return "no file part"
 
+    files = request.files.getlist("file")
 
+    # Check if the file is selected
+    if not files:
+        return "No selected files"
+    
+    pets = {"id_gambar": pets[0], "lokasi_gambar": pets[1]}
 
+    allowed_files = ["image/jpeg", "image/jpg", "image/webp", "image/png"]
+    # Check if the file type is allowed
+    for file in files:
+        if file.content_type not in allowed_files:
+            return "File type not allowed"
+
+    # Save the uploaded file to a specific folder
+    locations = []
+    for file in files:
+        location = "static/images/" + str(time.time()) + "_" + file.filename
+        file.save(location)
+        locations.append(location)
+    
+    id_gambar = request.form.get("id_gambar")
+
+    try:
+        pets.edit_gambar(id_gambar, lokasi_gambar=locations)
+    except Exception as e:
+        for file in files:
+            if os.path.exists(location):
+                os.remove(location)
+        raise e
+    return {"message": "Edit gambar berhasil"}, 200
+
+#Delete Gambar
+@app.delete("/gambar/<int:binatang>")
+def del_gambar(id_binatang: int):
+    if pets is None:
+        return "Image not found"
+
+    data = {"id_gambar": pets[0], "lokasi_gambar": pets[1]}
+    os.remove(data["lokasi_gambar"])
+    pets.upload_gambar(id_binatang)
+    return {"message": "Edit gambar berhasil"}, 200
         
 #----------------------------------------------------------------------------
-#New Donatur Done
+#Donatur Done
+@app.get("/donatur")
+def get_all_donatur():
+    return donatur.get_all_donatur()
+
+@app.get("/donatur/<int:id_donatur>")
+def find_id_donatur(id_donatur: int):
+    return donatur.find_id_donatur(id_donatur)
+
 @app.post("/donatur")
 def new_donatur():
-    try:
-        nama_donatur = request.form.get('nama_donatur')
-        email_donatur = request.form.get('email_donatur')
-        jumlah_donasi = request.form.get('jumlah_donasi')
+    return donatur.new_donatur()
 
-        pets.new_donatur(nama_donatur, email_donatur, jumlah_donasi)
-        return "", 202
-    except ValidateError as e:
-        return str(e), 401
-    
-#Edit Donatur Done
 @app.put("/donatur/<int:id_donatur>")
-def edit_donatur(id_donatur):
-    
-        nama_donatur = request.form.get('nama_donatur')
-        email_donatur = request.form.get('email_donatur')
-        jumlah_donasi = request.form.get('jumlah_donasi')
+def edit_donatur(id_donatur: int):
+    return donatur.edit_donatur(id_donatur)
 
-        pets.edit_donatur(id_donatur, nama_donatur, email_donatur, jumlah_donasi)
-        return "", 202
-
-#Delete Donatur Done
 @app.delete("/donatur/<int:id_donatur>")
 def del_donatur(id_donatur):
-    pets.del_donatur(id_donatur)
-    return "Sudah di Hapus", 404
+    return donatur.del_donatur(id_donatur)
 
 
 #----------------------------------------------------------------------------
-#New Kegiatan Done
+#Kegiatan Done
+@app.get("/kegiatan")
+def get_all_kegiatan():
+    return kegiatan.get_all_kegiatan()
+
+@app.get("/kegiatan/<int:id_kegiatan>")
+def find_by_id(id_kegiatan: int):
+    return kegiatan.find_by_id(id_kegiatan)
+
 @app.post("/kegiatan")
 def new_kegiatan():
-    try:
-        jenis_kegiatan = request.form.get('jenis_kegiatan')
-        lokasi_kegiatan = request.form.get('lokasi_kegiatan')
+    return kegiatan.new_kegiatan()
 
-        pets.new_kegiatan(jenis_kegiatan, lokasi_kegiatan)
-        return "", 202
-    except ValidateError as e:
-        return str(e), 401
-    
-#Edit Kegiatan Done
 @app.put("/kegiatan/<int:id_kegiatan>")
 def edit_kegiatan(id_kegiatan):
-    try:
-        jenis_kegiatan = request.form.get('jenis_kegiatan')
-        lokasi_kegiatan = request.form.get('lokasi_kegiatan')
+    return kegiatan.edit_kegiatan(id_kegiatan)
 
-        pets.edit_kegiatan(id_kegiatan, jenis_kegiatan, lokasi_kegiatan)
-        return "", 202
-    except ValidateError as e:
-        return str(e), 401
-
-#Delete Kegiatan Done
 @app.delete("/kegiatan/<int:id_kegiatan>")
 def del_kegiatan(id_kegiatan):
-    pets.del_kegiatan(id_kegiatan)
-    return "Sudah di Hapus", 404
+    return kegiatan.del_kegiatan(id_kegiatan)
+
 
 #----------------------------------------------------------------------------
-#New penyelamatan Done
+#Penyelamatan Done
+@app.get("/penyelamatan")
+def get_all_penyelamatan():
+    return penyelamatan.get_all_penyelamatan()
+
+@app.get("/penyelamatan/<int:id_penyelamatan>")
+def find_id_penyelamatan(id_penyelamatan: int):
+    return penyelamatan.find_id_penyelamatan(id_penyelamatan)
+    
 @app.post("/penyelamatan")
 def new_penyelamatan():
-    try:
-        lokasi_penyelamatan = request.form.get('lokasi_penyelamatan')
-        nama_penyelamatan = request.form.get('nama_penyelamatan')
+    return penyelamatan.new_penyelamatan()
 
-        pets.new_penyelamatan(lokasi_penyelamatan, nama_penyelamatan)
-        return "", 202
-    except ValidateError as e:
-        return str(e), 401
-    
-#Edit penyelamatan Done
-@app.put("/penyelamatan/<int:id_penyelataman>")
-def edit_penyelamatan(id_penyelataman):
-    try:
-        lokasi_penyelamatan = request.form.get('lokasi_penyelamatan')
-        nama_penyelamatan = request.form.get('nama_penyelamatan')
+@app.put("/penyelamatan/<int:id_penyelamatan>")
+def edit_penyelamatan(id_penyelamatan):
+    return penyelamatan.edit_penyelamatan(id_penyelamatan)
 
-        pets.edit_penyelamatan(id_penyelataman, lokasi_penyelamatan, nama_penyelamatan)
-        return "", 202
-    except ValidateError as e:
-        return str(e), 401
+@app.delete("/penyelamatan/<int:id_penyelamatan>")
+def del_penyelamatan(id_penyelamatan):
+    return penyelamatan.del_penyelamatan(id_penyelamatan)
 
-#Delete penyelamatan Done
-@app.delete("/penyelamatan/<int:id_penyelataman>")
-def del_penyelamatan(id_penyelataman):
-    pets.del_penyelamatan(id_penyelataman)
-    return "Sudah di Hapus", 404
     
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5001, use_reloader=True)
