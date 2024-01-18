@@ -4,6 +4,8 @@ from flask_jwt_extended import create_access_token
 from models import login
 from models import user 
 
+#----------------------------------------------------------------------------
+#Login
 def login_controller():
     email = request.form.get("email")
     password = request.form.get("password")
@@ -14,6 +16,9 @@ def login_controller():
         return{"Login berhasil": access_token}
     return("Email atau password salah"), 404
 
+
+#----------------------------------------------------------------------------
+#User
 def register_controller():
     username = request.form.get('username')
     password = request.form.get('password')

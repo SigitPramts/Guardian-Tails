@@ -4,11 +4,9 @@ from flask_jwt_extended import (
     JWTManager,
     jwt_required,
     create_access_token,
- 
     get_jwt_identity,
 )
 import logging
-import pets
 from validator import validate_register, ValidateError
 from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
@@ -22,6 +20,7 @@ import controllers.donatur as donatur
 import controllers.kegiatan as kegiatan
 import controllers.penyelamatan as penyelamatan
 import controllers.auth as user
+import controllers.binatang as binatang
 
 
 #----------------------------------------------------------------------------
@@ -44,102 +43,46 @@ def del_user(id_admin: int):
     
     
 #----------------------------------------------------------------------------
-
+#Binatang Done
 @app.get("/pets")
-def get_binatang():
-    return pets.get_binatang()
+def get_all_binatang():
+    return binatang.get_all_binatang()
 
-@app.get("/pets/<int:id_admin>")
-def get_pet_id(id):
-    pet = pets.get_pet_id(id)
-    if pet is None:
-        return "", 404
-    return pet
+@app.get("/pets/<int:id_binatang>")
+def find_id_binatang(id_binatang: int):
+    return binatang.find_id_binatang(id_binatang)
+
+@app.post("/pets")
+def new_binatang():
+    return binatang.new_binatang()
+
+@app.put("/pets/<int:id_binatang>")
+def edit_binatang(id_binatang: int):
+    return binatang.edit_binatang(id_binatang)
+
+@app.delete("/pets/<int:id_binatang>")
+def del_binatang(id_binatang: int):
+    return binatang.del_binatang(id_binatang)
+
+
+#----------------------------------------------------------------------------
+@app.get("/gambar")
+def get_all_gambar():
+    return binatang.get_all_gambar()
+
+@app.get("/gambar/<int:id_gambar>")
+def find_id_gambar(id_gambar: int):
+    return binatang.find_id_gambar(id_gambar)
 
 #Upload Gambar Done
 @app.route("/gambar/<int:id_binatang>", methods=["POST"])
 def upload_gambar(id_binatang: int):
-    try:
-        # Check if the 'file' key exists in request.files
-        if "file" not in request.files:
-            return "No file part"
+    return binatang.upload_gambar(id_binatang)
 
-        files = request.files.getlist("file")
+@app.delete("/gambar/<int:id_gambar>")
+def delete_gambar(id_gambar: int):
+    return binatang.del_gambar(id_gambar)
 
-        # Check if files list is empty
-        if not files:
-            return "No selected file"
-
-        locations = []
-
-        for file in files:
-            # Check file type
-            if file.content_type not in ["image/jpeg", "image/jpg", "image/webp", "image/png"]:
-                return "File type not allowed"
-
-            location = "static/images/" + str(time.time()) + "_" + file.filename
-            file.save(location)
-            locations.append(location)
-
-            # Assume you have a function named 'upload_gambar' that takes a list of locations
-            pets.upload_gambar(id_binatang,lokasi_gambar=location)
-
-        return {"message": "Upload gambar berhasil"}, 200
-    except Exception as e:
-        # If an exception occurs, delete the uploaded files
-        for location in locations:
-            if os.path.exists(location):
-                os.remove(location)
-        raise e
-        
-#Edit Gambar Done
-@app.route("/gambar/<int:id_gambar>", methods=["PUT"])
-def edit_gambar(id_gambar):
-    if "file" not in request.files:
-        return "no file part"
-
-    files = request.files.getlist("file")
-
-    # Check if the file is selected
-    if not files:
-        return "No selected files"
-    
-    pets = {"id_gambar": pets[0], "lokasi_gambar": pets[1]}
-
-    allowed_files = ["image/jpeg", "image/jpg", "image/webp", "image/png"]
-    # Check if the file type is allowed
-    for file in files:
-        if file.content_type not in allowed_files:
-            return "File type not allowed"
-
-    # Save the uploaded file to a specific folder
-    locations = []
-    for file in files:
-        location = "static/images/" + str(time.time()) + "_" + file.filename
-        file.save(location)
-        locations.append(location)
-    
-    id_gambar = request.form.get("id_gambar")
-
-    try:
-        pets.edit_gambar(id_gambar, lokasi_gambar=locations)
-    except Exception as e:
-        for file in files:
-            if os.path.exists(location):
-                os.remove(location)
-        raise e
-    return {"message": "Edit gambar berhasil"}, 200
-
-#Delete Gambar
-@app.delete("/gambar/<int:binatang>")
-def del_gambar(id_binatang: int):
-    if pets is None:
-        return "Image not found"
-
-    data = {"id_gambar": pets[0], "lokasi_gambar": pets[1]}
-    os.remove(data["lokasi_gambar"])
-    pets.upload_gambar(id_binatang)
-    return {"message": "Edit gambar berhasil"}, 200
         
 #----------------------------------------------------------------------------
 #Donatur Done
