@@ -16,7 +16,7 @@ from db import conn
         return items'''
     
 def get_all_binatang(page: int, limit: int, keyword: str = None):
-    cur = conn.cursor()
+    connection = conn.cursor()
 
     try:
         page = (page - 1) * limit
@@ -36,8 +36,8 @@ def get_all_binatang(page: int, limit: int, keyword: str = None):
                 OFFSET %(offset)s
                 """
         print(query, values)
-        cur.execute(query, values)
-        binatang = cur.fetchall()
+        connection.execute(query, values)
+        binatang = connection.fetchall()
         result = []  # Buat daftar baru untuk menyimpan kamus
 
         for row in binatang:
@@ -55,7 +55,7 @@ def get_all_binatang(page: int, limit: int, keyword: str = None):
         conn.rollback()
         raise e
     finally:
-        cur.close()
+        connection.close()
 
     return result
 
@@ -78,9 +78,9 @@ def find_id_binatang(id_binatang: int):
         }
 
 def new_binatang(nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, id_admin: int):
-    cur = conn.cursor()
+    connection = conn.cursor()
     try:
-        cur.execute("INSERT INTO binatang (nama_binatang, jenis_kelamin, jenis_hewan, id_admin) VALUES (%(nama_binatang)s, %(jenis_kelamin)s, %(jenis_hewan)s, %(id_admin)s)",
+        connection.execute("INSERT INTO binatang (nama_binatang, jenis_kelamin, jenis_hewan, id_admin) VALUES (%(nama_binatang)s, %(jenis_kelamin)s, %(jenis_hewan)s, %(id_admin)s)",
                     {
                         "nama_binatang":nama_binatang,
                         "jenis_kelamin":jenis_kelamin,
@@ -92,26 +92,26 @@ def new_binatang(nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, id_ad
         conn.rollback()
         raise e
     finally:
-        cur.close()
+        connection.close()
 
 def edit_binatang(id_binatang, nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, id_admin: int):
-    cur = conn.cursor()
+    connection = conn.cursor()
     try:
-        cur.execute('UPDATE binatang SET nama_binatang =%s, jenis_kelamin =%s, jenis_hewan =%s, id_admin =%s WHERE id_binatang = %s',(nama_binatang,jenis_kelamin,jenis_hewan,id_admin,id_binatang))
+        connection.execute('UPDATE binatang SET nama_binatang =%s, jenis_kelamin =%s, jenis_hewan =%s, id_admin =%s WHERE id_binatang = %s',(nama_binatang,jenis_kelamin,jenis_hewan,id_admin,id_binatang))
         conn.commit()
     except Exception as e:
         conn.rollback()
         raise e
     finally:
-        cur.close()
+        connection.close()
 
 def del_binatang(id_binatang):
-    cur = conn.cursor()
+    connection = conn.cursor()
     try:
-        cur.execute('DELETE FROM binatang WHERE id_binatang = %s', (id_binatang,))
+        connection.execute('DELETE FROM binatang WHERE id_binatang = %s', (id_binatang,))
         conn.commit()
     except Exception as e:
         conn.rollback()
         raise e
     finally:
-        conn.close()
+        connection.close()

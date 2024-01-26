@@ -27,34 +27,34 @@ def find_id_gambar(id_gambar: int):
         }
 
 def upload_gambar(id_binatang, lokasi_gambar):
-    cur = conn.cursor()
+    connection = conn.cursor()
     try:
-        cur.execute("INSERT INTO gambar (id_binatang,lokasi_gambar) VALUES (%s, %s)", (id_binatang,lokasi_gambar))
+        connection.execute("INSERT INTO gambar (id_binatang,lokasi_gambar) VALUES (%s, %s)", (id_binatang,lokasi_gambar))
         conn.commit()
     except Exception as e:
         conn.rollback()
         raise e
     finally:
-        cur.close()
+        connection.close()
 
 def edit_gambar(id_gambar: int, lokasi_gambar: str):
-    cur = conn.cursor()
+    connection = conn.cursor()
     try:
-        cur.execute("UPDATE gambar SET lokasi_gambar =%s WHERE id_gambar =%s", (lokasi_gambar,id_gambar))
+        connection.execute("UPDATE gambar SET lokasi_gambar =%s WHERE id_gambar =%s", (lokasi_gambar,id_gambar))
         conn.commit()
     except Exception as e:
         conn.rollback()
         raise e
     finally:
-        cur.close()
+        connection.close()
         
 def del_gambar(id_gambar: int):
-    cur = conn.cursor()
+    connection = conn.cursor()
     try:
-        cur.execute('DELETE FROM gambar WHERE id_gambar = %s', (id_gambar,))
+        connection.execute('DELETE FROM gambar WHERE id_gambar = %s', (id_gambar,))
         conn.commit()
     except Exception as e:
         conn.rollback()
         raise e
     finally:
-        conn.close()
+        connection.close()

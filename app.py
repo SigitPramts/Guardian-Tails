@@ -89,7 +89,7 @@ def find_id_gambar(id_gambar: int):
     return binatang.find_id_gambar(id_gambar)
 
 #Upload Gambar Done
-@app.route("/gambar/<int:id_binatang>", methods=["POST"])
+@app.post("/gambar/<int:id_binatang>")
 @jwt_required()
 def upload_gambar(id_binatang: int):
     return binatang.upload_gambar(id_binatang)

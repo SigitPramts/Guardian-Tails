@@ -1,10 +1,10 @@
 from db import conn
 
 def login_model(email, password):
-    cur = conn.cursor()
+    connection = conn.cursor()
     try:
-        cur.execute("SELECT * FROM admin WHERE email = %s AND password = %s", (email, password))
-        item = cur.fetchone()
+        connection.execute("SELECT * FROM admin WHERE email = %s AND password = %s", (email, password))
+        item = connection.fetchone()
         conn.commit()
         if item is None:
             return None

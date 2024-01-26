@@ -24,9 +24,9 @@ def find_id_donatur(id_donatur: int):
         return {"id_donatur": item[0], "nama_donatur": item[1], "email_donatur": item[2], "jumlah_donasi": item[3], "id_kegiatan": item[4]}
 
 def new_donatur(nama_donatur: str, email_donatur: str, jumlah_donasi: int, id_kegiatan: int):
-    cur = conn.cursor()
+    connection = conn.cursor()
     try:
-        cur.execute('INSERT INTO donatur (nama_donatur, email_donatur, jumlah_donasi, id_kegiatan) VALUES (%(nama_donatur)s, %(email_donatur)s, %(jumlah_donasi)s, %(id_kegiatan)s)',
+        connection.execute('INSERT INTO donatur (nama_donatur, email_donatur, jumlah_donasi, id_kegiatan) VALUES (%(nama_donatur)s, %(email_donatur)s, %(jumlah_donasi)s, %(id_kegiatan)s)',
                     {
                         "nama_donatur":nama_donatur,
                         "email_donatur":email_donatur,
@@ -38,26 +38,26 @@ def new_donatur(nama_donatur: str, email_donatur: str, jumlah_donasi: int, id_ke
         conn.rollback()
         raise e
     finally:
-        cur.close()
+        connection.close()
 
 def edit_donatur(id_donatur, nama_donatur: str, email_donatur: str, jumlah_donasi: int, id_kegiatan):
-    cur = conn.cursor()
+    connection = conn.cursor()
     try:
-        cur.execute('UPDATE donatur SET nama_donatur =%s, email_donatur =%s, jumlah_donasi =%s, id_kegiatan =%s WHERE id_donatur = %s',(nama_donatur,email_donatur,jumlah_donasi,id_kegiatan,id_donatur))
+        connection.execute('UPDATE donatur SET nama_donatur =%s, email_donatur =%s, jumlah_donasi =%s, id_kegiatan =%s WHERE id_donatur = %s',(nama_donatur,email_donatur,jumlah_donasi,id_kegiatan,id_donatur))
         conn.commit()
     except Exception as e:
         conn.rollback()
         raise e
     finally:
-        cur.close()
+        connection.close()
 
 def del_donatur(id_donatur):
-    cur = conn.cursor()
+    connection = conn.cursor()
     try:
-        cur.execute('DELETE FROM donatur WHERE id_donatur = %s', (id_donatur,))
+        connection.execute('DELETE FROM donatur WHERE id_donatur = %s', (id_donatur,))
         conn.commit()
     except Exception as e:
         conn.rollback()
         raise e
     finally:
-        conn.close()
+        connection.close()
