@@ -29,11 +29,11 @@ def new_penyelamatan(lokasi_penyelamatan: str, nama_penyelamatan: str, id_binata
     try:
         connection.execute('INSERT INTO penyelamatan (lokasi_penyelamatan, nama_penyelamatan, id_binatang, id_admin) VALUES (%(lokasi_penyelamatan)s, %(nama_penyelamatan)s, %(id_binatang)s, %(id_admin)s)',
                     {
-                        "lokasi_penyelamatan":lokasi_penyelamatan,
-                        "nama_penyelamatan":nama_penyelamatan,
-                        "id_binatang":id_binatang,
-                        "id_admin":id_admin
-                    },)
+                        "lokasi_penyelamatan": lokasi_penyelamatan,
+                        "nama_penyelamatan": nama_penyelamatan,
+                        "id_binatang": id_binatang,
+                        "id_admin": id_admin
+                    })
         conn.commit()
     except Exception as e:
         conn.rollback()

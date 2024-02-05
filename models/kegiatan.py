@@ -15,13 +15,17 @@ def get_all_kegiatan():
         return items    
     
 def find_by_id(id_kegiatan: int):
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT id_kegiatan, jenis_kegiatan, tanggal_kegiatan, lokasi_kegiatan, id_admin FROM kegiatan WHERE id_kegiatan=%s", (id_kegiatan,))
-        item = cursor.fetchone()
+    connection = conn.cursor()
+    try:
+        connection.execute("SELECT id_kegiatan, jenis_kegiatan, tanggal_kegiatan, lokasi_kegiatan, id_admin FROM kegiatan WHERE id_kegiatan=%s", (id_kegiatan,))
+        item = connection.fetchone()
         if item is None:
             return None
 
         return {"id_kegiatan": item[0], "jenis_kegiatan": item[1], "tanggal_kegiatan": item[2], "lokasi_kegiatan": item[3], "id_admin": item[4]}
+    finally:
+        connection.close()
+
 
 def new_kegiatan(jenis_kegiatan: str, lokasi_kegiatan: str, id_admin: int):
     connection = conn.cursor()

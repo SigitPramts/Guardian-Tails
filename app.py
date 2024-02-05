@@ -2,10 +2,7 @@ from flask import Flask
 from flask_jwt_extended import (
     JWTManager,
     jwt_required,
-    get_jwt_identity,
 )
-import logging
-from controllers.validator import validate_register, ValidateError
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -17,16 +14,21 @@ import controllers.donatur as donatur
 import controllers.kegiatan as kegiatan
 import controllers.penyelamatan as penyelamatan
 import controllers.auth as user
+from controllers.auth import ambil_data_user_controller
 import controllers.binatang as binatang
 
 
 #----------------------------------------------------------------------------
+@app.get("/users")
+@jwt_required()
+def ambil_data_user():
+    return ambil_data_user_controller()
+
 #Auth done
 @app.get("/protected")
 @jwt_required()
 def validation():
-    users = get_jwt_identity()
-    return{"Kamu berhasil login sebagai":users}, 200
+    return ambil_data_user_controller()
 
 @app.post("/login")
 def login():
@@ -36,13 +38,13 @@ def login():
 def register():
     return user.register_controller()
 
-@app.put("/user/<int:id_admin>")
-def edit_user(id_admin: int):
-    return user.edit_user(id_admin)
+@app.put('/user')
+def edit_user():
+    return user.edit_user()
 
-@app.delete("/user/<int:id_admin>")
-def del_user(id_admin: int):
-    return user.del_user(id_admin)
+@app.delete("/user")
+def del_user():
+    return user.del_user()
     
     
 #----------------------------------------------------------------------------
@@ -64,7 +66,6 @@ def find_id_binatang(id_binatang: int):
     return binatang.find_id_binatang(id_binatang)
 
 @app.post("/pets")
-@jwt_required()
 def new_binatang():
     return binatang.new_binatang()
 
@@ -141,10 +142,9 @@ def find_by_id(id_kegiatan: int):
 def new_kegiatan():
     return kegiatan.new_kegiatan()
 
-@app.put("/kegiatan/<int:id_kegiatan>")
-@jwt_required()
-def edit_kegiatan(id_kegiatan):
-    return kegiatan.edit_kegiatan(id_kegiatan)
+@app.put("/kegiatan")
+def edit_kegiatan():
+    return kegiatan.edit_kegiatan()
 
 @app.delete("/kegiatan/<int:id_kegiatan>")
 @jwt_required()
