@@ -78,7 +78,7 @@ def vcreate_gambar_binatang(**kwargs):
         errors.append("id binatang harus berupa angka")
         return {"errors": errors}
 
-    binatang = BufferError.find_id_binatang(id_binatang)
+    binatang = binatang_model.find_id_binatang(id_binatang)
     if binatang is None:
         errors.append("id binatang tidak ditemukan")
         return {"errors": errors}
@@ -97,3 +97,5 @@ def vcreate_gambar_binatang(**kwargs):
     if len(errors) > 0:
         return errors
     return None
+
+#del belum
