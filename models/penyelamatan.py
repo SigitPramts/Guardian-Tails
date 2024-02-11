@@ -41,10 +41,10 @@ def new_penyelamatan(lokasi_penyelamatan: str, nama_penyelamatan: str, id_binata
     finally:
         connection.close()
 
-def edit_penyelamatan(id_penyelamatan, lokasi_penyelamatan: str, nama_penyelamatan: str, id_binatang: int, id_admin: int):
+def edit_penyelamatan(id_penyelamatan, lokasi_penyelamatan: str, nama_penyelamatan: str, id_binatang: int, id_admin):
     connection = conn.cursor()
     try:
-        connection.execute('UPDATE penyelamatan SET lokasi_penyelamatan =%s, nama_penyelamatan =%s, id_binatang =%s, id_admin =%s WHERE id_penyelamatan = %s',(lokasi_penyelamatan,nama_penyelamatan,id_binatang,id_admin,id_penyelamatan))
+        connection.execute('UPDATE penyelamatan SET lokasi_penyelamatan =%s, nama_penyelamatan =%s, id_binatang =%s, id_admin =%s WHERE id_penyelamatan = %s',(lokasi_penyelamatan,nama_penyelamatan,id_binatang,id_penyelamatan,id_admin))
         conn.commit()
     except Exception as e:
         conn.rollback()
@@ -52,10 +52,10 @@ def edit_penyelamatan(id_penyelamatan, lokasi_penyelamatan: str, nama_penyelamat
     finally:
         connection.close()
 
-def del_penyelamatan(id_penyelamatan):
+def del_penyelamatan(id_penyelamatan, id_admin):
     connection = conn.cursor()
     try:
-        connection.execute('DELETE FROM penyelamatan WHERE id_penyelamatan = %s', (id_penyelamatan,))
+        connection.execute('DELETE FROM penyelamatan WHERE id_penyelamatan = %s AND id_admin = %s', (id_penyelamatan,id_admin))
         conn.commit()
     except Exception as e:
         conn.rollback()

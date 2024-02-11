@@ -1,5 +1,7 @@
 from db import conn
 
+
+
 def get_all_kegiatan():
     with conn.cursor() as cursor:
         cursor.execute("SELECT id_kegiatan, jenis_kegiatan, tanggal_kegiatan, lokasi_kegiatan, id_admin FROM kegiatan")
@@ -43,10 +45,10 @@ def new_kegiatan(jenis_kegiatan: str, lokasi_kegiatan: str, id_admin: int):
     finally:
         connection.close()
     
-def edit_kegiatan(id_kegiatan, jenis_kegiatan: str, lokasi_kegiatan: str, id_admin: int):
+def edit_kegiatan(id_kegiatan, jenis_kegiatan: str, lokasi_kegiatan: str, id_admin):
     connection = conn.cursor()
     try:
-        connection.execute('UPDATE kegiatan SET jenis_kegiatan =%s, lokasi_kegiatan =%s, id_admin =%s WHERE id_kegiatan = %s',(jenis_kegiatan,lokasi_kegiatan,id_admin,id_kegiatan))
+        connection.execute('UPDATE kegiatan SET jenis_kegiatan = %s, lokasi_kegiatan = %s WHERE id_kegiatan = %s AND id_admin = %s', (jenis_kegiatan, lokasi_kegiatan, id_kegiatan, id_admin,))
         conn.commit()
     except Exception as e:
         conn.rollback()
@@ -54,10 +56,10 @@ def edit_kegiatan(id_kegiatan, jenis_kegiatan: str, lokasi_kegiatan: str, id_adm
     finally:
         connection.close()
 
-def del_kegiatan(id_kegiatan):
+def del_kegiatan(id_kegiatan, id_admin):
     connection = conn.cursor()
     try:
-        connection.execute('DELETE FROM kegiatan WHERE id_kegiatan = %s', (id_kegiatan,))
+        connection.execute('DELETE FROM kegiatan WHERE id_kegiatan = %s AND id_admin = %s', (id_kegiatan,id_admin))
         conn.commit()
     except Exception as e:
         conn.rollback()

@@ -142,9 +142,10 @@ def find_by_id(id_kegiatan: int):
 def new_kegiatan():
     return kegiatan.new_kegiatan()
 
-@app.put("/kegiatan")
-def edit_kegiatan():
-    return kegiatan.edit_kegiatan()
+@app.put("/kegiatan/<int:id_kegiatan>")
+@jwt_required()
+def edit_kegiatan(id_kegiatan):
+    return kegiatan.edit_kegiatan(id_kegiatan)
 
 @app.delete("/kegiatan/<int:id_kegiatan>")
 @jwt_required()

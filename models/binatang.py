@@ -105,10 +105,10 @@ def edit_binatang(id_binatang, nama_binatang: str, jenis_kelamin: str, jenis_hew
     finally:
         connection.close()
 
-def del_binatang(id_binatang):
+def del_binatang(id_binatang, id_admin):
     connection = conn.cursor()
     try:
-        connection.execute('DELETE FROM binatang WHERE id_binatang = %s', (id_binatang,))
+        connection.execute('DELETE FROM binatang WHERE id_binatang = %s AND id_admin = %s', (id_binatang,id_admin))
         conn.commit()
     except Exception as e:
         conn.rollback()

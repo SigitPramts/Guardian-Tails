@@ -3,7 +3,6 @@ from models import binatang
 
 from flask import request
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from werkzeug.exceptions import BadRequest
 
 from validator import binatang as binatang_validator
 from validator.donatur import ValidateError
@@ -54,63 +53,58 @@ def find_id_binatang(id_binatang: int):
     
     return find_id_binatang
 
-@jwt_required
+@jwt_required()
 def new_binatang():
     try:
         admin_saat_ini = get_jwt_identity().get('id_admin')
         nama_binatang = request.form.get("nama_binatang")
         jenis_kelamin = request.form.get("jenis_kelamin")
         jenis_hewan = request.form.get("jenis_hewan")
-        id_admin = request.form.get("id_admin")
-
-        if admin_saat_ini != id_admin:
-            return {"error": "Tidak diizinkan untuk mengubah informasi admin lain"}, 403
 
         validate = binatang_validator.vcreate_binatang(
             nama_binatang=nama_binatang,
             jenis_kelamin=jenis_kelamin,
             jenis_hewan=jenis_hewan,
-            id_admin=id_admin
         )
 
         if validate is not None:
             return {"errors": validate}, 422
         
-        binatang.new_binatang(nama_binatang, jenis_kelamin, jenis_hewan, id_admin)
+        binatang.new_binatang(nama_binatang, jenis_kelamin, jenis_hewan, admin_saat_ini)
         return {"msg": "Binatang berhasil ditambah"}
     except ValidateError as e:
         return str(e), 400
 
-@jwt_required
+@jwt_required()
 def edit_binatang(id_binatang: int):
     try:
-        admin_saat_ini = get_jwt_identity()
+        admin_saat_ini = get_jwt_identity()['id_admin']
         nama_binatang = request.form.get("nama_binatang")
         jenis_kelamin = request.form.get("jenis_kelamin")
         jenis_hewan = request.form.get("jenis_hewan")
-        id_admin = request.form.get("id_admin")
-
-        if admin_saat_ini != int(id_admin):
-            return {"message": "Tidak diizinkan untuk mengubah informasi admin lain"}
 
         validate = binatang_validator.vedit_binatang(
             nama_binatang=nama_binatang,
             jenis_kelamin=jenis_kelamin,
             jenis_hewan=jenis_hewan,
-            id_admin=id_admin
         )
 
         if validate is not None:
             return {"errors": validate}, 422
         
-        binatang.edit_binatang(id_binatang, nama_binatang, jenis_kelamin, jenis_hewan, id_admin)
+        binatang.edit_binatang(id_binatang, nama_binatang, jenis_kelamin, jenis_hewan, admin_saat_ini)
         return {"msg": "Binatang berhasil diubah"}, 200
     except ValidateError as e:
         return str(e), 400
 
+@jwt_required()
 def del_binatang(id_binatang: int):
-    binatang.del_binatang(id_binatang)
-    return {"msg": "Berhasil dihapus"}, 404
+    try:
+        admin_saat_ini = get_jwt_identity()['id_admin']
+        binatang.del_binatang(id_binatang, admin_saat_ini)
+        return {"msg": "Berhasil dihapus"}, 404
+    except Exception as e:
+        return str(e), 400
 
 
 #----------------------------------------------------------------------------
