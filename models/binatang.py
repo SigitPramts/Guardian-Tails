@@ -94,10 +94,10 @@ def new_binatang(nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, id_ad
     finally:
         connection.close()
 
-def edit_binatang(id_binatang, nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, id_admin: int):
+def edit_binatang(id_binatang, nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, id_admin):
     connection = conn.cursor()
     try:
-        connection.execute('UPDATE binatang SET nama_binatang =%s, jenis_kelamin =%s, jenis_hewan =%s, id_admin =%s WHERE id_binatang = %s',(nama_binatang,jenis_kelamin,jenis_hewan,id_admin,id_binatang))
+        connection.execute('UPDATE binatang SET nama_binatang =%s, jenis_kelamin =%s, jenis_hewan =%s, id_admin =%s WHERE id_binatang = %s',(nama_binatang,jenis_kelamin,jenis_hewan,id_binatang,id_admin))
         conn.commit()
     except Exception as e:
         conn.rollback()

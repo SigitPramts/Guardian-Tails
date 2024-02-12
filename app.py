@@ -5,11 +5,19 @@ from flask_jwt_extended import (
 )
 from flask_cors import CORS
 
+# Inisialisasi aplikasi Flask
 app = Flask(__name__)
+
+# Mengaktifkan CORS untuk mengizinkan akses lintas domain
 CORS(app)
+
+# Mengatur kunci rahasia untuk JWT
 app.config["JWT_SECRET_KEY"] = "rahasia"
+
+# Menginisialisasi JWTManager dengan aplikasi Flask
 jwt = JWTManager(app)
 
+# Mengimpor modul-modul yang diperlukan
 import controllers.donatur as donatur
 import controllers.kegiatan as kegiatan
 import controllers.penyelamatan as penyelamatan
@@ -19,84 +27,94 @@ import controllers.binatang as binatang
 
 
 #----------------------------------------------------------------------------
+# Fungsi untuk mendapatkan data pengguna (user)
 @app.get("/users")
 @jwt_required()
 def ambil_data_user():
     return ambil_data_user_controller()
 
-#Auth done
+# Endpoint terlindungi untuk validasi token JWT
 @app.get("/protected")
 @jwt_required()
 def validation():
     return ambil_data_user_controller()
 
+# Endpoint untuk proses login pengguna
 @app.post("/login")
 def login():
     return user.login_controller()
 
+# Endpoint untuk proses registrasi pengguna
 @app.post("/register")
 def register():
     return user.register_controller()
 
-@app.put('/user')
+# Endpoint untuk mengedit profil pengguna
+@app.put('/user/profile')
 def edit_user():
     return user.edit_user()
 
-@app.delete("/user")
+# Endpoint untuk menghapus profil pengguna
+@app.delete("/user/profile")
 def del_user():
     return user.del_user()
     
     
 #----------------------------------------------------------------------------
-#Binatang Done
+# Endpoint untuk mengambil informasi binatang
 @app.get("/pets")
 def get_all_binatang():
     return binatang.get_all_binatang()
 
+# Endpoint untuk mencari informasi binatang
 @app.get("/pets/search")
 def search():
     return binatang.search()
 
+# Endpoint untuk mencari informasi binatang
 @app.get("/pets/multi_search")
 def multi_search():
     return binatang.multi_search()
 
+# Endpoint untuk mencari informasi binatang
 @app.get("/pets/<int:id_binatang>")
 def find_id_binatang(id_binatang: int):
     return binatang.find_id_binatang(id_binatang)
 
+# Endpoint untuk menambah binatang
 @app.post("/pets")
 def new_binatang():
     return binatang.new_binatang()
 
+# Endpoint untuk mengedit binatang
 @app.put("/pets/<int:id_binatang>")
-@jwt_required()
-def edit_binatang(id_binatang: int):
+def edit_binatang(id_binatang):
     return binatang.edit_binatang(id_binatang)
 
+# Endpoint untuk menghapus binatang
 @app.delete("/pets/<int:id_binatang>")
-@jwt_required()
 def del_binatang(id_binatang: int):
     return binatang.del_binatang(id_binatang)
 
 
 #----------------------------------------------------------------------------
+# Endpoint untuk mencari gambar binatang
 @app.get("/gambar")
 def get_all_gambar():
     return binatang.get_all_gambar()
 
+# Endpoint untuk mencari gambar binatang
 @app.get("/gambar/<int:id_gambar>")
 def find_id_gambar(id_gambar: int):
     return binatang.find_id_gambar(id_gambar)
 
-#Upload Gambar Done
+# Endpoint untuk menambah gambar binatang
 @app.post("/gambar/<int:id_binatang>")
-@jwt_required()
 def upload_gambar(id_binatang: int):
     return binatang.upload_gambar(id_binatang)
 
+# Endpoint untuk menghapus gambar binatang
 @app.delete("/gambar/<int:id_gambar>")
-@jwt_required()
 def delete_gambar(id_gambar: int):
     return binatang.del_gambar(id_gambar)
 
@@ -112,17 +130,14 @@ def find_id_donatur(id_donatur: int):
     return donatur.find_id_donatur(id_donatur)
 
 @app.post("/donatur")
-@jwt_required()
 def new_donatur():
     return donatur.new_donatur()
 
 @app.put("/donatur/<int:id_donatur>")
-@jwt_required()
 def edit_donatur(id_donatur: int):
     return donatur.edit_donatur(id_donatur)
 
 @app.delete("/donatur/<int:id_donatur>")
-@jwt_required()
 def del_donatur(id_donatur):
     return donatur.del_donatur(id_donatur)
 
@@ -138,17 +153,14 @@ def find_by_id(id_kegiatan: int):
     return kegiatan.find_by_id(id_kegiatan)
 
 @app.post("/kegiatan")
-@jwt_required()
 def new_kegiatan():
     return kegiatan.new_kegiatan()
 
 @app.put("/kegiatan/<int:id_kegiatan>")
-@jwt_required()
 def edit_kegiatan(id_kegiatan):
     return kegiatan.edit_kegiatan(id_kegiatan)
 
 @app.delete("/kegiatan/<int:id_kegiatan>")
-@jwt_required()
 def del_kegiatan(id_kegiatan):
     return kegiatan.del_kegiatan(id_kegiatan)
 
@@ -164,20 +176,16 @@ def find_id_penyelamatan(id_penyelamatan: int):
     return penyelamatan.find_id_penyelamatan(id_penyelamatan)
     
 @app.post("/penyelamatan")
-@jwt_required()
 def new_penyelamatan():
     return penyelamatan.new_penyelamatan()
 
 @app.put("/penyelamatan/<int:id_penyelamatan>")
-@jwt_required()
 def edit_penyelamatan(id_penyelamatan):
     return penyelamatan.edit_penyelamatan(id_penyelamatan)
 
 @app.delete("/penyelamatan/<int:id_penyelamatan>")
-@jwt_required()
 def del_penyelamatan(id_penyelamatan):
     return penyelamatan.del_penyelamatan(id_penyelamatan)
-
     
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5001, use_reloader=True)

@@ -1,10 +1,12 @@
 from db import conn
+from flask_bcrypt import Bcrypt
 
 def login_model(email, password):
     connection = conn.cursor()
     try:
         connection.execute('SELECT email, password, id_admin from admin WHERE email = %s AND password = %s',(email,password))
         item = connection.fetchone()
+        
         conn.commit()
         if item is None:
             return None
@@ -37,10 +39,12 @@ def find_id_user(id_admin: int):
 def register(username: str, password: str, nama_lengkap: str, email: str):
     connection = conn.cursor()
     try:
+        bcrypt = Bcrypt()
+        hash_pass = bcrypt.generate_password_hash(password).decode('utf-8')
         connection.execute('INSERT INTO admin (username, password, nama_lengkap, email) VALUES (%(username)s, %(password)s, %(nama_lengkap)s, %(email)s)',
                     {
                         "username":username,
-                        "password":password,
+                        "password":hash_pass,
                         "nama_lengkap":nama_lengkap,
                         "email":email,
                     },)

@@ -41,12 +41,12 @@ def register_controller():
         nama_lengkap = request.form.get('nama_lengkap')
         email = request.form.get('email')
 
-        validate = validate_register (username, password, nama_lengkap, email)
+        validate = validate_register(username, password, nama_lengkap, email)
         if validate is not None:
             return validate, 404
 
         user.register(username, password, nama_lengkap, email)
-        return {"msg":"Admin berhasil ditambah"}, 200
+        return {"msg": "Admin berhasil ditambah"}, 200
     except ValidateError as e:
         return str(e), 400
 
