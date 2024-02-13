@@ -1,4 +1,5 @@
 from models import kegiatan as kegiatan_model
+from models import donatur as donatur_model
 
 import json
 
@@ -87,6 +88,20 @@ def vedit_donatur(**kwargs):
     if kegiatan is None:
         errors.append("id kegiatan tidak ditemukan")
         return {"errors": errors}
+
+    if len(errors) > 0:
+        raise ValidateError(json.dumps({"errors": errors}))
+
+def vdelete_donatur(id_donatur: int):
+    errors = []
+
+    if not id_donatur:
+        errors.append("ID Donatur harus diisi")
+
+    # Memeriksa apakah id_kegiatan ditemukan dalam database
+    donatur = donatur_model.find_id_donatur(id_donatur)
+    if donatur is None:
+        errors.append("ID Donatur tidak ditemukan")
 
     if len(errors) > 0:
         raise ValidateError(json.dumps({"errors": errors}))

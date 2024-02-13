@@ -49,7 +49,7 @@ def login():
 def register():
     return user.register_controller()
 
-# Endpoint untuk mengedit profil pengguna
+# Endpoint untuk mengubah profil pengguna
 @app.put('/user/profile')
 def edit_user():
     return user.edit_user()
@@ -86,7 +86,7 @@ def find_id_binatang(id_binatang: int):
 def new_binatang():
     return binatang.new_binatang()
 
-# Endpoint untuk mengedit binatang
+# Endpoint untuk mengubah binatang
 @app.put("/pets/<int:id_binatang>")
 def edit_binatang(id_binatang):
     return binatang.edit_binatang(id_binatang)
@@ -120,69 +120,81 @@ def delete_gambar(id_gambar: int):
 
         
 #----------------------------------------------------------------------------
-#Donatur Done
+# Endpoint untuk mencari donatur
 @app.get("/donatur")
 def get_all_donatur():
     return donatur.get_all_donatur()
 
+# Endpoint untuk mencari donatur
 @app.get("/donatur/<int:id_donatur>")
 def find_id_donatur(id_donatur: int):
     return donatur.find_id_donatur(id_donatur)
 
+# Endpoint untuk menambah donatur
 @app.post("/donatur")
 def new_donatur():
     return donatur.new_donatur()
 
+# Endpoint untuk mengubah donatur
 @app.put("/donatur/<int:id_donatur>")
 def edit_donatur(id_donatur: int):
     return donatur.edit_donatur(id_donatur)
 
+# Endpoint untuk menghapus donatur
 @app.delete("/donatur/<int:id_donatur>")
 def del_donatur(id_donatur):
     return donatur.del_donatur(id_donatur)
 
 
 #----------------------------------------------------------------------------
-#Kegiatan Done
+# Endpoint untuk mencari kegiatan
 @app.get("/kegiatan")
 def get_all_kegiatan():
     return kegiatan.get_all_kegiatan()
 
+# Endpoint untuk mencari kegiatan
 @app.get("/kegiatan/<int:id_kegiatan>")
 def find_by_id(id_kegiatan: int):
     return kegiatan.find_by_id(id_kegiatan)
 
+# Endpoint untuk membuat kegiatan
 @app.post("/kegiatan")
 def new_kegiatan():
     return kegiatan.new_kegiatan()
 
+# Endpoint untuk mengubah kegiatan
 @app.put("/kegiatan/<int:id_kegiatan>")
 def edit_kegiatan(id_kegiatan):
     return kegiatan.edit_kegiatan(id_kegiatan)
 
+# Endpoint untuk menghapus kegiatan
 @app.delete("/kegiatan/<int:id_kegiatan>")
 def del_kegiatan(id_kegiatan):
     return kegiatan.del_kegiatan(id_kegiatan)
 
 
 #----------------------------------------------------------------------------
-#Penyelamatan Done
+# Endpoint untuk mencari penyelamatan
 @app.get("/penyelamatan")
 def get_all_penyelamatan():
     return penyelamatan.get_all_penyelamatan()
 
+# Endpoint untuk mencari kegiatan
 @app.get("/penyelamatan/<int:id_penyelamatan>")
 def find_id_penyelamatan(id_penyelamatan: int):
     return penyelamatan.find_id_penyelamatan(id_penyelamatan)
     
+# Endpoint untuk menambah penyelamatan
 @app.post("/penyelamatan")
 def new_penyelamatan():
     return penyelamatan.new_penyelamatan()
 
+# Endpoint untuk mengubah penyelamatan
 @app.put("/penyelamatan/<int:id_penyelamatan>")
 def edit_penyelamatan(id_penyelamatan):
     return penyelamatan.edit_penyelamatan(id_penyelamatan)
 
+# Endpoint untuk menghapus penyelamatan
 @app.delete("/penyelamatan/<int:id_penyelamatan>")
 def del_penyelamatan(id_penyelamatan):
     return penyelamatan.del_penyelamatan(id_penyelamatan)

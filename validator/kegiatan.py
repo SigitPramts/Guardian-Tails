@@ -1,7 +1,3 @@
-from models import user as user_model
-
-import json
-
 class ValidateError(Exception):
     def __init__(self, message):
         super().__init__(message)
@@ -19,7 +15,8 @@ def vcreate_kegiatan(**kwargs):
         errors.append("Lokasi kegiatan tidak boleh kosong")
 
     if len(errors) > 0:
-        raise ValidateError(json.dumps({"errors": errors}))
+        return errors
+    return None
 
 def vedit_kegiatan(**kwargs):
     jenis_kegiatan = kwargs.get("jenis_kegiatan")
@@ -34,4 +31,5 @@ def vedit_kegiatan(**kwargs):
         errors.append("Lokasi kegiatan tidak boleh kosong")
 
     if len(errors) > 0:
-        raise ValidateError(json.dumps({"errors": errors}))
+        return errors
+    return None

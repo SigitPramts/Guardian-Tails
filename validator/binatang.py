@@ -20,21 +20,6 @@ def vcreate_binatang(**kwargs):
 
     if jenis_hewan is None or len(jenis_hewan) <= 0:
         errors.append("Jenis hewan harus di isi")
-
-    """if id_admin is None or str(id_admin).strip() == '':
-        errors.append("id admin harus di isi")
-        return {"errors": errors}
-
-    try:
-        id_admin = int(id_admin)
-    except ValueError:
-        errors.append("id admin harus berupa angka")
-        return {"errors": errors}
-
-    user = user_model.find_id_user(id_admin)
-    if user is None:
-        errors.append("id kegiatan tidak ditemukan")
-        return {"errors": errors}"""
     
     if len(errors) > 0:
         return errors

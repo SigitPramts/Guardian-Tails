@@ -1,4 +1,5 @@
-import json
+import json, re
+from models.user import is_username_email_unique
 
 class ValidateError(Exception):
     def __init__(self, message):
@@ -8,33 +9,61 @@ class ValidateError(Exception):
 def validate_register(username, password, nama_lengkap, email):
     errors = []
 
-    if username is None:
-        errors.append("Username harus di isi")
+    if not username or username.strip() == "":
+        errors.append("Username harus diisi")
+    elif len(username) < 8:
+        errors.append("Username harus terdiri dari minimal 8 karakter")
+    elif not is_username_email_unique(username, email):
+        errors.append("Username sudah digunakan")
+
+    if not password or password.strip() == "":
+        errors.append("Password harus diisi")
+    elif len(password) < 8:
+        errors.append("Password harus terdiri dari minimal 8 karakter")
+    elif ' ' in password:
+        errors.append("Password tidak boleh mengandung spasi")
+
+    if not nama_lengkap or nama_lengkap.strip() == "":
+        errors.append("Nama lengkap harus diisi")
+
+    if not email or email.strip() == "":
+        errors.append("Email harus diisi")
     else:
-        if len(username) < 8:
-            errors.append("Username harus lebih dari 8 karakter")
-
-    if password is None:
-        errors.append("Password harus di isi")
-    else:
-        if len(password) < 8:
-            errors.append("Password harus lebih dari 8 karakter")
-        elif ' ' in password:
-            errors.append("Password tidak boleh mengandung spasi")
-
-
-    if nama_lengkap is None:
-        errors.append("Nama lengkap harus di isi")
-
-    if email is None or not email.strip():
-        errors.append("Email harus di isi")
-    else:
-        # You can add more sophisticated email validation if needed
-        # For a simple check, you can use a regular expression
-        import re
         email_pattern = re.compile(r"[^@]+@[^@]+\.[^@]+")
         if not email_pattern.match(email):
             errors.append("Format email tidak valid")
+        elif not is_username_email_unique(username, email):
+            errors.append("Email sudah digunakan")
+
+
+def validate_edit(username, password, nama_lengkap, email):
+    errors = []
+
+    if not username or username.strip() == "":
+        errors.append("Username harus diisi")
+    elif len(username) < 8:
+        errors.append("Username harus terdiri dari minimal 8 karakter")
+    elif not is_username_email_unique(username, email):
+        errors.append("Username sudah digunakan")
+
+    if not password or password.strip() == "":
+        errors.append("Password harus diisi")
+    elif len(password) < 8:
+        errors.append("Password harus terdiri dari minimal 8 karakter")
+    elif ' ' in password:
+        errors.append("Password tidak boleh mengandung spasi")
+
+    if not nama_lengkap or nama_lengkap.strip() == "":
+        errors.append("Nama lengkap harus diisi")
+
+    if not email or email.strip() == "":
+        errors.append("Email harus diisi")
+    else:
+        email_pattern = re.compile(r"[^@]+@[^@]+\.[^@]+")
+        if not email_pattern.match(email):
+            errors.append("Format email tidak valid")
+        elif not is_username_email_unique(username, email):
+            errors.append("Email sudah digunakan")
     
     if len(errors) > 0:
         raise ValidateError(json.dumps({"errors": errors}))
