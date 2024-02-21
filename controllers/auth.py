@@ -34,7 +34,7 @@ def login_controller():
     if login_controller:
         access_token = create_access_token(identity={'id_admin':login_controller['id_admin'],'email':login_controller['email']})
         return{"token": access_token}
-    return{"message":"Email atau password salah"}, 404
+    return{"message":"Email atau password salah"}, 400
 
 
 #----------------------------------------------------------------------------

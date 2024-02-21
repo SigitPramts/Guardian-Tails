@@ -88,7 +88,7 @@ def new_binatang():
 
 # Endpoint untuk mengubah binatang
 @app.put("/pets/<int:id_binatang>")
-def edit_binatang(id_binatang):
+def edit_binatang(id_binatang: int):
     return binatang.edit_binatang(id_binatang)
 
 # Endpoint untuk menghapus binatang
@@ -200,4 +200,4 @@ def del_penyelamatan(id_penyelamatan):
     return penyelamatan.del_penyelamatan(id_penyelamatan)
     
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5001, use_reloader=True)
+    app.run(debug=False, host="0.0.0.0", port=5001, use_reloader=True)

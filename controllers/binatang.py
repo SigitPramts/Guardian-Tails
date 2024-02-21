@@ -89,7 +89,7 @@ def new_binatang():
         
         #Tambahkan binatang baru ke dalam database
         binatang.new_binatang(nama_binatang, jenis_kelamin, jenis_hewan, admin_saat_ini)
-        return {"msg": "Binatang berhasil ditambah"}
+        return {"msg": "Binatang berhasil ditambah"}, 200
     except ValidateError as e:
         return str(e), 400
 
@@ -139,7 +139,7 @@ def del_binatang(id_binatang: int):
 
         # Menghapus data binatang dari database
         binatang.del_binatang(id_binatang, admin_saat_ini)
-        return {"msg": "Berhasil dihapus"}, 200
+        return {"msg": "Berhasil dihapus"}, 404
     except Exception as e:
         return str(e), 400
 
@@ -193,7 +193,7 @@ def upload_gambar(id_binatang: int):
                 #Menangani kesalahan spesifik jika diperlukan
                 return {"error": f"Error menyimpan gambar: {str(e)}"}, 500
 
-        return {"message": "Gambar berhasil ditambah"}, 201
+        return {"message": "Gambar berhasil ditambah"}, 200
     except Exception as e:
         #Menangani kesalahan spesifik jika diperlukan
         return {"error": f"Error memproses gambar: {str(e)}"}, 500
@@ -218,4 +218,4 @@ def del_gambar(id_gambar: int):
     else:
         return {"msg": "Lokasi gambar tidak ditemukan"}, 404
 
-    return {"message": "Gambar berhasil dihapus"}, 200
+    return {"message": "Gambar berhasil dihapus"}, 404

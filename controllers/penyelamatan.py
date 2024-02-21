@@ -6,15 +6,8 @@ from validator import penyelamatan as penyelamatan_validator
 from validator.penyelamatan import ValidateError
 
 #Fungsi untuk mendapatkan semua data penyelamatan
-@jwt_required()
 def get_all_penyelamatan():
-    #Mendapatkan parameter pencarian dari permintaan
-    keyword = request.args.get("keyword")
-    limit = int(request.args.get("limit", 5))
-    page = int(request.args.get("page", 1))
-    admin_saat_ini = get_jwt_identity().get('id_admin')
-    
-    return penyelamatan.get_all_penyelamatan(keyword=keyword, limit=limit, page=page, id_admin=admin_saat_ini)
+    return penyelamatan.get_all_penyelamatan()
 
 #Fungsi untuk menemukan penyelamatan berdasarkan ID
 def find_id_penyelamatan(id_penyelamatan: int):

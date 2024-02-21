@@ -35,6 +35,9 @@ def validate_register(username, password, nama_lengkap, email):
         elif not is_username_email_unique(username, email):
             errors.append("Email sudah digunakan")
 
+    if len(errors) > 0:
+        raise ValidateError(json.dumps({"errors": errors}))
+
 
 def validate_edit(username, password, nama_lengkap, email):
     errors = []

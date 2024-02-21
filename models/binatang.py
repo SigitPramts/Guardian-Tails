@@ -85,11 +85,11 @@ def new_binatang(nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, id_ad
         connection.close()  #Tutup koneksi database setelah selesai
 
 #Fungsi untuk mengedit binatang
-def edit_binatang(id_binatang, nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, id_admin):
+def edit_binatang(id_binatang, nama_binatang: str, jenis_kelamin: str, jenis_hewan: str, id_admin: int):
     connection = conn.cursor()  #Membuat kursor database
     try:
         #Eksekusi pernyataan SQL untuk mengedit binatang
-        connection.execute('UPDATE binatang SET nama_binatang =%s, jenis_kelamin =%s, jenis_hewan =%s, id_admin =%s WHERE id_binatang = %s',(nama_binatang,jenis_kelamin,jenis_hewan,id_binatang,id_admin))
+        connection.execute('UPDATE binatang SET nama_binatang =%s, jenis_kelamin =%s, jenis_hewan =%s, id_admin =%s WHERE id_binatang = %s',(nama_binatang,jenis_kelamin,jenis_hewan,id_admin,id_binatang))
         conn.commit()  #Commit transaksi jika berhasil
     except Exception as e:
         conn.rollback()  #Lakukan rollback jika terjadi kesalahan
