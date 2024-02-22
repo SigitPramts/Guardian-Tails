@@ -85,6 +85,6 @@ def del_penyelamatan(id_penyelamatan: int):
         
         #Hapus penyelamatan
         penyelamatan.del_penyelamatan(id_penyelamatan, admin_saat_ini)
-        return {"msg": "Berhasil dihapus"}, 404
+        return {"msg": "Berhasil dihapus"}, 200
     except Exception as e:
         return str(e), 400

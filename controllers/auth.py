@@ -86,6 +86,6 @@ def del_user():
     try:
         admin_saat_ini = get_jwt_identity()['id_admin'] #Mengambil user ID dari JWT token
         user.del_user(admin_saat_ini)
-        return {"msg": "Berhasil dihapus"}, 404
+        return {"msg": "Berhasil dihapus"}, 200
     except Exception as e:
         raise e

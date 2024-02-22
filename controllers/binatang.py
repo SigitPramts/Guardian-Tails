@@ -139,7 +139,7 @@ def del_binatang(id_binatang: int):
 
         # Menghapus data binatang dari database
         binatang.del_binatang(id_binatang, admin_saat_ini)
-        return {"msg": "Berhasil dihapus"}, 404
+        return {"msg": "Berhasil dihapus"}, 200
     except Exception as e:
         return str(e), 400
 
@@ -218,4 +218,4 @@ def del_gambar(id_gambar: int):
     else:
         return {"msg": "Lokasi gambar tidak ditemukan"}, 404
 
-    return {"message": "Gambar berhasil dihapus"}, 404
+    return {"message": "Gambar berhasil dihapus"}, 200

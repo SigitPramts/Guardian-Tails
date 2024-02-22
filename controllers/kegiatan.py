@@ -83,6 +83,6 @@ def del_kegiatan(id_kegiatan):
         
         #Hapus kegiatan
         kegiatan.del_kegiatan(id_kegiatan, admin_saat_ini)
-        return {"message": "Kegiatan berhasil di hapus"},404
+        return {"message": "Kegiatan berhasil di hapus"}, 200
     except Exception as e:
         return str(e), 400
