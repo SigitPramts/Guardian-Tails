@@ -1,0 +1,917 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Dokumentasi API Guardian Tails",
+    "description": "<h1>API Sistem Program Paws Secured</h1>\nGreetings to Pet Secured, a recently acquired set of skills applied to craft a user-friendly application dedicated to guarantee the safety and welfare of your cherished pets. \n<h2>1. User</h2>\n  - Login\n  - Register\n  - Edit Profile \n  - Hapus Profile\n\n<h2>2. Binatang</h2>\n  - Cari Binatang\n  - Menambah Binatang\n  - Edit Data Binatang \n  - Hapus Data Binatang\n  - Menambahkan Gambar Binatang\n  - Hapus Gambar Binatang\n\n<h2>3. Kegiatan</h2>\n  - Mencari Kegiatan\n  - Menambah Kegiatan\n  - Edit Kegiatan\n  - Hapus Kegiatan\n\n<h2>4. Penyelamatan</h2>\n  - Mencari Penyelamatan\n  - Menambah Penyelamatan\n  - Edit Penyelamatan\n  - Hapus Penyelamatan\n\n<h2>5. Donatur</h2>\n  - Mencari Donatur\n  - Menambah Donatur\n  - Edit Donatur\n  - Hapus Donatur\n",
+    "version": "0.5 Beta Version"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001"
+    },
+    {
+      "url": "http://127.0.0.1:5001"
+    },
+    {
+      "url": "http://192.168.100.248:5001"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "paths": {
+    "/protected": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Protected",
+        "operationId": "patch",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "nama_lengkap": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/profile": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Protected",
+        "operationId": "profile",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "nama_lengkap": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Protected",
+        "operationId": "del profile",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/pets": {
+      "get": {
+        "tags": [
+          "Binatang"
+        ],
+        "summary": "Protected",
+        "operationId": "binatang",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "Search by title",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Binatang"
+        ],
+        "summary": "Protected",
+        "operationId": "newBinatang",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nama_binatang": {
+                    "type": "string"
+                  },
+                  "jenis_kelamin": {
+                    "type": "string"
+                  },
+                  "jenis_hewan": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pets/{id_binatang}": {
+      "put": {
+        "tags": [
+          "Binatang"
+        ],
+        "summary": "Protected",
+        "operationId": "findBinatang",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_binatang",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nama_binatang": {
+                    "type": "string"
+                  },
+                  "jenis_kelamin": {
+                    "type": "string"
+                  },
+                  "jenis_hewan": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Binatang"
+        ],
+        "summary": "Protected",
+        "operationId": "delBinatang",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_binatang",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/gambar": {
+      "get": {
+        "tags": [
+          "Gambar Binatang"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/gambar/{id_binatang}": {
+      "post": {
+        "tags": [
+          "Gambar Binatang"
+        ],
+        "summary": "Protected",
+        "operationId": "gambar",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_binatang",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "images": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gambar/{id_gambar}": {
+      "delete": {
+        "tags": [
+          "Gambar Binatang"
+        ],
+        "summary": "Protected",
+        "operationId": "protected",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_gambar",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/kegiatan": {
+      "get": {
+        "tags": [
+          "Kegiatan"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "Search by title",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Kegiatan"
+        ],
+        "summary": "Protected",
+        "operationId": "newKegiatan",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "jenis_kegiatan": {
+                    "type": "string"
+                  },
+                  "lokasi_kegiatan": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kegiatan/{id_kegiatan}": {
+      "put": {
+        "tags": [
+          "Kegiatan"
+        ],
+        "summary": "Protected",
+        "operationId": "kegiatan",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_kegiatan",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "jenis_kegiatan": {
+                    "type": "string"
+                  },
+                  "lokasi_kegiatan": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Kegiatan"
+        ],
+        "summary": "Protected",
+        "operationId": "delKegiatan",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_kegiatan",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/penyelamatan": {
+      "get": {
+        "tags": [
+          "Penyelamatan"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "Search by title",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Penyelamatan"
+        ],
+        "summary": "Protected",
+        "operationId": "newPenyelamatan",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lokasi_penyelamatan": {
+                    "type": "string"
+                  },
+                  "nama_penyelamatan": {
+                    "type": "string"
+                  },
+                  "id_binatang": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/penyelamatan/{id_penyelamatan}": {
+      "put": {
+        "tags": [
+          "Penyelamatan"
+        ],
+        "summary": "Protected",
+        "operationId": "editPenyelamatan",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_penyelamatan",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lokasi_penyelamatan": {
+                    "type": "string"
+                  },
+                  "nama_penyelamatan": {
+                    "type": "string"
+                  },
+                  "id_binatang": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Penyelamatan"
+        ],
+        "summary": "Protected",
+        "operationId": "delPenyelamatan",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_penyelamatan",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/donatur": {
+      "get": {
+        "tags": [
+          "Donatur"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "Search by title",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Donatur"
+        ],
+        "summary": "Protected",
+        "operationId": "newDonatur",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nama_donatur": {
+                    "type": "string"
+                  },
+                  "email_donatur": {
+                    "type": "string"
+                  },
+                  "jumlah_donasi": {
+                    "type": "integer"
+                  },
+                  "id_kegiatan": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/donatur/{id_donatur}": {
+      "put": {
+        "tags": [
+          "Donatur"
+        ],
+        "summary": "Protected",
+        "operationId": "editDonatur",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_donatur",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nama_donatur": {
+                    "type": "string"
+                  },
+                  "email_donatur": {
+                    "type": "string"
+                  },
+                  "jumlah_donasi": {
+                    "type": "integer"
+                  },
+                  "id_kegiatan": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Donatur"
+        ],
+        "summary": "Protected",
+        "operationId": "delDonatur",
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_donatur",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Admin"
+    },
+    {
+      "name": "Binatang"
+    },
+    {
+      "name": "Gambar Binatang"
+    },
+    {
+      "name": "Kegiatan"
+    },
+    {
+      "name": "Penyelamatan"
+    },
+    {
+      "name": "Donatur"
+    }
+  ]
+}
